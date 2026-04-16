@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,96 +8,87 @@
     <meta name="description" content="AI Assistant to guide your decisions during large-scale sporting events.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <!-- Premium Cyberpunk Background -->
     <div class="mesh-bg"></div>
     <div class="cyber-grid"></div>
-    
+
     <div class="app-container">
-        
+
         <!-- TOP HEADER -->
         <header class="app-header glass">
             <div class="logo-wrapper">
-                <div class="logo-icon"></div>
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                </div>
                 <div>
-                    <h1 class="neon-text">Event Companion AI</h1>
+                    <h1 class="neon-text">Crowd Pilot AI</h1>
                     <p class="tagline">Holographic Stadium Matrix</p>
                 </div>
             </div>
-            
-            <div class="header-controls">
-                <!-- Weather Toggle -->
-                <div class="toggle-wrapper glass">
-                    <span class="toggle-label" id="weather-label">Weather:</span>
-                    <span id="weather-icon" class="weather-icon-display" aria-hidden="true">☀️</span>
-                    <label class="switch">
-                        <input type="checkbox" id="weather-toggle" aria-labelledby="weather-label" aria-label="Toggle raining weather protocol">
-                        <span class="slider round" aria-hidden="true"></span>
-                    </label>
-                </div>
 
-                <!-- Firebase Toggle -->
-                <div class="toggle-wrapper glass">
-                    <span class="toggle-label" id="firebase-label">Data Source:</span>
-                    <span id="data-source-text" class="source-text local" aria-live="polite">Local Sim</span>
-                    <label class="switch">
-                        <input type="checkbox" id="firebase-toggle" aria-labelledby="firebase-label" aria-label="Toggle live firebase stream">
-                        <span class="slider round" aria-hidden="true"></span>
-                    </label>
-                </div>
-
-                <div class="event-status glass">
-                    <span class="status-dot pulsing"></span>
-                    <div class="status-info">
-                        <span class="label">Event Phase</span>
-                        <strong id="event-phase-display" class="neon-text">Pre-Game</strong>
-                    </div>
+            <div class="event-status glass">
+                <span class="status-dot pulsing"></span>
+                <div class="status-info">
+                    <span class="label">Event Phase</span>
+                    <strong id="event-phase-display" class="neon-text">Pre-Game</strong>
                 </div>
             </div>
         </header>
 
+        <!-- SUB-HEADER CONTROLS -->
+        <section class="control-bar glass">
+            <!-- Weather Toggle -->
+            <div class="toggle-wrapper glass">
+                <span class="toggle-label" id="weather-label">Weather:</span>
+                <span id="weather-icon" class="weather-icon-display" aria-hidden="true">☀️</span>
+                <label class="switch">
+                    <input type="checkbox" id="weather-toggle" aria-labelledby="weather-label"
+                        aria-label="Toggle raining weather protocol">
+                    <span class="slider round" aria-hidden="true"></span>
+                </label>
+            </div>
+
+            <!-- ADA Mode Toggle -->
+            <div class="toggle-wrapper glass">
+                <span class="toggle-label" id="ada-label">Access:</span>
+                <span id="ada-icon" class="weather-icon-display" aria-hidden="true">🚶</span>
+                <label class="switch">
+                    <input type="checkbox" id="ada-toggle" aria-labelledby="ada-label"
+                        aria-label="Toggle ADA accessibility routing">
+                    <span class="slider round ada-slider" aria-hidden="true"></span>
+                </label>
+            </div>
+
+            <!-- Firebase Toggle -->
+            <div class="toggle-wrapper glass">
+                <span class="toggle-label" id="firebase-label">Data Source:</span>
+                <span id="data-source-text" class="source-text local" aria-live="polite">Local Sim</span>
+                <label class="switch">
+                    <input type="checkbox" id="firebase-toggle" aria-labelledby="firebase-label"
+                        aria-label="Toggle live firebase stream">
+                    <span class="slider round" aria-hidden="true"></span>
+                </label>
+            </div>
+        </section>
+
         <!-- MAIN RESPONSIVE GRID -->
         <main class="dashboard-grid">
-            
+
             <!-- COLUMN 1: Personalization & Map -->
             <div class="col-personal">
-                
-                <section class="map-section glass tilt-card hover-glow" aria-label="Interactive Map Display">
-                    <h2>Live Radar Array</h2>
-                    <div class="map-container">
-                        <svg viewBox="0 0 200 200" class="arena-map" role="img" aria-label="Holographic visualization of stadium node routing">
-                            <!-- Radar Pulses -->
-                            <circle cx="100" cy="100" r="40" class="radar-ring r-1" />
-                            <circle cx="100" cy="100" r="40" class="radar-ring r-2" />
-                            <circle cx="100" cy="100" r="40" class="radar-ring r-3" />
 
-                            <circle cx="100" cy="100" r="40" class="stadium-core" />
-                            <text x="100" y="104" text-anchor="middle" fill="#fff" font-size="12" font-family="Outfit" font-weight="800" class="svg-neon-text">FIELD</text>
-                            
-                            <!-- Routing Paths -->
-                            <line x1="100" y1="60" x2="100" y2="20" id="path-north" class="map-path" stroke-width="4" stroke-dasharray="4" />
-                            <line x1="100" y1="140" x2="100" y2="180" id="path-south" class="map-path" stroke-width="4" stroke-dasharray="4" />
-                            <line x1="140" y1="100" x2="180" y2="100" id="path-east" class="map-path" stroke-width="4" stroke-dasharray="4" />
-                            <line x1="60" y1="100" x2="20" y2="100" id="path-west" class="map-path" stroke-width="4" stroke-dasharray="4" />
-                            
-                            <!-- Gate Nodes -->
-                            <circle cx="100" cy="15" r="8" class="gate-node" id="node-north" />
-                            <circle cx="100" cy="185" r="8" class="gate-node" id="node-south" />
-                            <circle cx="185" cy="100" r="8" class="gate-node" id="node-east" />
-                            <circle cx="15" cy="100" r="8" class="gate-node" id="node-west" />
-
-                            <text x="100" y="19" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">N</text>
-                            <text x="100" y="189" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">S</text>
-                            <text x="185" y="104" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">E</text>
-                            <text x="15" y="104" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">W</text>
-                        </svg>
-                    </div>
-                </section>
-
-                <section class="card glass tilt-card hover-glow">
+                <section class="card glass tilt-card hover-glow" style="border-top: 2px solid var(--neon-cyan);">
                     <h2>Ticket Uplink</h2>
                     <p style="color: var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">The AI will adapt logic strictly to your location relative to the venue map.</p>
                     <form id="personalization-form" class="form-grid">
@@ -108,9 +100,19 @@
                             <label for="arrival-time">Expected Arrival</label>
                             <input type="time" id="arrival-time" required>
                         </div>
-                        <button type="submit" class="btn-primary">Generate Sequence <span style="font-size: 1.2rem;">⚡</span></button>
+                        <button type="submit" class="btn-primary" style="height: 50.5px; margin-top: 0.5rem;">Uplink ⚡</button>
                     </form>
                 </section>
+
+                <section class="card glass tilt-card hover-glow" style="border-top: 2px solid var(--warning);">
+                    <h2 style="color:var(--warning);">Facilities Demand</h2>
+                    <h3 class="subsection-title" style="margin-top:1rem;">Amenities</h3>
+                    <div id="live-amenities-container" class="stat-list"></div>
+
+                    <h3 class="subsection-title" style="margin-top:1.5rem; color: var(--warning); border-bottom-color: rgba(250, 204, 21, 0.2);">Merchandise</h3>
+                    <div id="live-merch-container" class="stat-list"></div>
+                </section>
+                
             </div>
 
             <!-- COLUMN 2: Recommendations -->
@@ -119,17 +121,21 @@
                     <div class="lock-screen" id="plan-lock-screen">
                         <span>🔒 System Locked</span>
                     </div>
-                    
+
                     <div class="rec-header">
                         <h2>Smart Itinerary</h2>
-                        <span class="badge" id="rec-entry-time" style="background:var(--accent-secondary)">Pending</span>
+                        <span class="badge" id="rec-entry-time"
+                            style="background:var(--accent-secondary)">Pending</span>
                     </div>
 
                     <div class="rec-block">
                         <h3>Optimal Active Route</h3>
-                        <div class="primary-suggestion" id="rec-gate" style="text-shadow: 0 0 10px var(--success)">TBD</div>
-                        <p class="reasoning" id="rec-gate-reason">Generate an uplink sequence to invoke AI simulation logic.</p>
-                        <div class="route-box"><strong>Suggested Path:</strong> <span id="rec-route" style="color: var(--neon-cyan)">-</span></div>
+                        <div class="primary-suggestion" id="rec-gate" style="text-shadow: 0 0 10px var(--success)">TBD
+                        </div>
+                        <p class="reasoning" id="rec-gate-reason">Generate an uplink sequence to invoke AI simulation
+                            logic.</p>
+                        <div class="route-box"><strong>Suggested Path:</strong> <span id="rec-route"
+                                style="color: var(--neon-cyan)">-</span></div>
                     </div>
 
                     <div class="rec-block">
@@ -150,25 +156,65 @@
                         </div>
                     </div>
 
-                    <div class="rec-block" style="border-bottom:none; padding-bottom:0;">
+                    <div class="rec-block" style="margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom: 1px dashed rgba(255,255,255,0.1);">
                         <h3>Predicted Exit Pattern</h3>
                         <div class="primary-suggestion neon-text" id="rec-exit-gate" style="font-size:1.2rem;">TBD</div>
                         <p class="reasoning" id="rec-exit-reason">-</p>
+                    </div>
+
+                    <div class="rec-block" style="border-bottom:none; padding-bottom:0;">
+                        <h3>Live Transit & Rideshare</h3>
+                        <div class="route-box" style="margin-bottom:0.8rem; background:rgba(139, 92, 246, 0.1); border-left-color:var(--neon-purple);">
+                            <strong>Rideshare Surge:</strong> <span id="rec-surge-pricing" style="color:var(--warning); font-weight:bold;">1.0x (Normal)</span>
+                        </div>
+                        <div class="route-box" style="background:rgba(255, 0, 85, 0.1); border-left-color:var(--neon-pink);">
+                            <strong>City Rail (Line E):</strong> <span id="rec-transit-status" style="color:#fff;">On Time</span>
+                        </div>
                     </div>
                 </section>
             </div>
 
             <!-- COLUMN 3: Live Feed -->
             <div class="col-live">
+                <section class="map-section glass tilt-card hover-glow" aria-label="Interactive Map Display" style="margin-bottom: 2rem;">
+                    <h2>Live Radar Array</h2>
+                    <div class="map-container">
+                        <svg viewBox="0 0 200 200" class="arena-map" role="img" aria-label="Holographic visualization of stadium node routing">
+                            <circle cx="100" cy="100" r="40" class="radar-ring r-1" />
+                            <circle cx="100" cy="100" r="40" class="radar-ring r-2" />
+                            <circle cx="100" cy="100" r="40" class="radar-ring r-3" />
+                            <circle cx="100" cy="100" r="40" class="stadium-core" />
+                            <text x="100" y="104" text-anchor="middle" fill="#fff" font-size="12" font-family="Outfit" font-weight="800" class="svg-neon-text">FIELD</text>
+
+                            <line x1="128" y1="72" x2="160" y2="40" id="path-vip" class="map-path" stroke-width="4" stroke-dasharray="4" />
+                            <line x1="100" y1="60" x2="100" y2="20" id="path-north" class="map-path" stroke-width="4" stroke-dasharray="4" />
+                            <line x1="100" y1="140" x2="100" y2="180" id="path-south" class="map-path" stroke-width="4" stroke-dasharray="4" />
+                            <line x1="140" y1="100" x2="180" y2="100" id="path-east" class="map-path" stroke-width="4" stroke-dasharray="4" />
+                            <line x1="60" y1="100" x2="20" y2="100" id="path-west" class="map-path" stroke-width="4" stroke-dasharray="4" />
+
+                            <circle cx="160" cy="40" r="8" class="gate-node" id="node-vip" />
+                            <circle cx="100" cy="15" r="8" class="gate-node" id="node-north" />
+                            <circle cx="100" cy="185" r="8" class="gate-node" id="node-south" />
+                            <circle cx="185" cy="100" r="8" class="gate-node" id="node-east" />
+                            <circle cx="15" cy="100" r="8" class="gate-node" id="node-west" />
+
+                            <text x="160" y="44" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">VIP</text>
+                            <text x="100" y="19" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">N</text>
+                            <text x="100" y="189" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">S</text>
+                            <text x="185" y="104" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">E</text>
+                            <text x="15" y="104" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">W</text>
+                        </svg>
+                    </div>
+                </section>
+
                 <section class="card glass live-feed-card tilt-card hover-glow">
                     <h2>Live Matrix Feed</h2>
-                    <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:1rem;">Real-time API saturation vectors and temporal predictive bounds.</p>
-                    
+                    <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:1rem;">Real-time API saturation
+                        vectors and temporal predictive bounds.</p>
+
                     <h3 class="subsection-title">Gates</h3>
                     <div id="live-gates-container" class="stat-list"></div>
-                    
-                    <h3 class="subsection-title" style="margin-top:1.5rem;">Amenities</h3>
-                    <div id="live-amenities-container" class="stat-list"></div>
+
                 </section>
             </div>
 
@@ -177,24 +223,28 @@
 
     <!-- FLOATING CHAT WIDGET -->
     <div id="ai-chat-widget" class="chat-widget float-mode collapsed">
-        <div class="chat-header" id="chat-header" role="button" aria-expanded="true" aria-controls="chat-body" tabindex="0">
+        <div class="chat-header" id="chat-header" role="button" aria-expanded="true" aria-controls="chat-body"
+            tabindex="0">
             <div class="chat-title">
                 <span class="ai-sparkle" aria-hidden="true">✨</span>
                 <span>Event Assistant AI</span>
             </div>
             <div style="display:flex; gap:10px; align-items:center;">
-                <button class="chat-settings-btn" id="api-settings-btn" title="Set Gemini API Key" aria-label="Open AI API Settings">⚙️</button>
+                <button class="chat-settings-btn" id="api-settings-btn" title="Set Gemini API Key"
+                    aria-label="Open AI API Settings">⚙️</button>
                 <button class="chat-toggle" id="chat-toggle" aria-label="Minimize Chat Assistant">▲</button>
             </div>
         </div>
-        
+
         <div class="chat-body" id="chat-body">
             <div class="chat-messages" id="chat-messages" aria-live="polite" aria-atomic="false">
-                <div class="message bot">Hello! I am reading the live data. Speak your question via the mic, or type below!</div>
+                <div class="message bot">Hello! I am reading the live data. Speak your question via the mic, or type
+                    below!</div>
             </div>
             <div class="chat-input-wrapper">
                 <button id="mic-btn" class="mic-btn" title="Voice AI" aria-label="Activate Speech to Text">🎤</button>
-                <input type="text" id="chat-input-field" placeholder="Ask anything..." autocomplete="off" aria-label="Chat input field">
+                <input type="text" id="chat-input-field" placeholder="Ask anything..." autocomplete="off"
+                    aria-label="Chat input field">
                 <button id="chat-send-btn" class="send-btn" aria-label="Send Message">→</button>
             </div>
         </div>
@@ -208,7 +258,8 @@
         <div class="modal-content glass">
             <h2 id="modal-title">Connect True AI</h2>
             <p>Paste a Google Gemini API Key to enable contextual reasoning.</p>
-            <input type="password" id="gemini-key-input" placeholder="AI Studio Key (AIzaSy...)" aria-label="Google Gemini API Key">
+            <input type="password" id="gemini-key-input" placeholder="AI Studio Key (AIzaSy...)"
+                aria-label="Google Gemini API Key">
             <div class="modal-actions">
                 <button class="btn-cancel" id="close-modal-btn" aria-label="Close Settings">Cancel</button>
                 <button class="btn-primary" id="save-key-btn" aria-label="Save Settings">Activate</button>
@@ -220,4 +271,5 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

@@ -59,23 +59,28 @@ const state = {
     phaseIndex: 0,
     phases: ["Pre-Game", "Quarter 1", "Halftime", "Quarter 3", "Post-Game"],
     gates: [
-        { id: 'north', name: 'North Gate', baseDensity: 20 },
-        { id: 'south', name: 'South Gate', baseDensity: 50 },
-        { id: 'east', name: 'East Gate', baseDensity: 30 },
-        { id: 'west', name: 'West Gate', baseDensity: 70 }
+        { id: 'vip', name: 'VIP Portal', baseDensity: 5 },
+        { id: 'north', name: 'North Gate', baseDensity: 35 },
+        { id: 'south', name: 'South Gate', baseDensity: 40 },
+        { id: 'east', name: 'East Gate', baseDensity: 38 },
+        { id: 'west', name: 'West Gate', baseDensity: 36 }
     ],
     amenities: [
         { id: 'food-main', name: 'Main Concourse Food', type: 'food', baseDensity: 10 },
         { id: 'rest-north', name: 'North Restrooms', type: 'restroom', baseDensity: 15 }
+    ],
+    merchandise: [
+        { id: 'merch-main', name: 'Main Team Store', type: 'merch', baseDensity: 85 },
+        { id: 'merch-kiosk', name: 'Level 2 Kiosk', type: 'merch', baseDensity: 40 }
     ]
 };
 
 const phaseModifiers = {
-    "Pre-Game": { gates: 1.5, food: 0.5, rest: 0.2 },
-    "Quarter 1": { gates: 0.2, food: 0.8, rest: 0.5 },
-    "Halftime": { gates: 0.1, food: 3.0, rest: 2.5 },
-    "Quarter 3": { gates: 0.2, food: 0.7, rest: 0.5 },
-    "Post-Game": { gates: 2.0, food: 0.1, rest: 0.8 } 
+    "Pre-Game": { gates: 1.5, food: 0.5, rest: 0.2, merch: 1.2 },
+    "Quarter 1": { gates: 0.2, food: 0.8, rest: 0.5, merch: 0.5 },
+    "Halftime": { gates: 0.1, food: 3.0, rest: 2.5, merch: 1.8 },
+    "Quarter 3": { gates: 0.2, food: 0.7, rest: 0.5, merch: 0.3 },
+    "Post-Game": { gates: 2.0, food: 0.1, rest: 0.8, merch: 2.5 } 
 };
 
 let previousPhase = null;
@@ -93,7 +98,8 @@ function notifyListeners() {
         amenities: state.amenities.map(a => {
             let m = a.type === 'food' ? mods.food : mods.rest;
             return calculateLive([a], m)[0];
-        })
+        }),
+        merchandise: calculateLive(state.merchandise, mods.merch)
     };
     handleLiveDataUpdate(liveData);
 }
@@ -129,9 +135,10 @@ function stopLocalSimulation() {
 // 3. RECOMMENDATION & WEATHER LOGIC
 // ==========================================
 const seatToGateMap = {
-    '100': ['south', 'east'],
-    '200': ['north', 'west'],
-    'vip': ['north']
+    '100': ['south', 'east', 'west'],
+    '200': ['north', 'east', 'west'],
+    '300': ['north', 'south', 'east', 'west'],
+    'vip': ['vip']
 };
 
 function calculateBestEntry(seatInput, liveGates, isRaining) {
@@ -141,13 +148,20 @@ function calculateBestEntry(seatInput, liveGates, isRaining) {
     let preferredIds = ['north', 'south', 'east', 'west'];
     if (normalized.includes('10')) preferredIds = seatToGateMap['100'];
     else if (normalized.includes('20')) preferredIds = seatToGateMap['200'];
-    else if (normalized.includes('vip')) preferredIds = seatToGateMap['vip'];
-    else preferredIds = liveGates.map(g => g.id);
+    else if (normalized.includes('30')) preferredIds = seatToGateMap['300'];
+    else if (normalized.includes('vip') || normalized.includes('club')) preferredIds = seatToGateMap['vip'];
+    else preferredIds = liveGates.filter(g => g.id !== 'vip').map(g => g.id); // exclude VIP for general traffic
 
     // Weather Logic: If Raining, West Gate (outdoor pathway) is heavily penalized
     let processedGates = liveGates.map(g => {
         let penalty = (isRaining && g.id === 'west') ? 500 : 0; 
         return { ...g, score: g.density + penalty };
+    });
+
+    // ADA Logic: Heavily penalize North and West gates (assume they have stairs/barriers)
+    processedGates = processedGates.map(g => {
+        let adaPenalty = (store.isADA && (g.id === 'north' || g.id === 'west')) ? 1000 : 0;
+        return { ...g, score: g.score + adaPenalty };
     });
 
     let viableGates = processedGates.filter(g => preferredIds.includes(g.id));
@@ -156,8 +170,10 @@ function calculateBestEntry(seatInput, liveGates, isRaining) {
     const bestGate = viableGates.reduce((min, cur) => cur.score < min.score ? cur : min);
     
     let reason = `Closest optimal entry mapped.`;
-    if(isRaining && bestGate.id !== 'west' && preferredIds.includes('west')) {
-        reason = `Weather override: Outdoor West Gate skipped due to rain. Routing to ${bestGate.name}.`;
+    if(isRaining && bestGate.id !== 'west') {
+        reason = `Weather Protocol Active: Outdoor West Gate bypassed. Routing to ${bestGate.name}.`;
+    } else if (store.isADA) {
+        reason = `ADA Mode Active: Prioritizing level pathways. Routing to ${bestGate.name}.`;
     }
 
     return { gateName: bestGate.name, density: bestGate.density, id: bestGate.id, reason };
@@ -295,7 +311,7 @@ function updateSVGMap(targetGateId) {
     }
 }
 
-const store = { latestData: null, userConfig: null, isRaining: false, current: function() { return this.latestData; } };
+const store = { latestData: null, userConfig: null, isRaining: false, isADA: false, current: function() { return this.latestData; } };
 
 document.addEventListener('DOMContentLoaded', () => {
     startSimulation();
@@ -322,6 +338,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if(store.userConfig) refreshRecommendations(); // Recalculate if plan exists
     });
 
+    // ADA Toggle Listener
+    document.getElementById('ada-toggle').addEventListener('change', (e) => {
+        store.isADA = e.target.checked;
+        document.getElementById('ada-icon').textContent = store.isADA ? '🦽' : '🚶';
+        showToast(store.isADA ? "ADA Accessibility Mode Active." : "Standard Routing.");
+        if(store.userConfig) refreshRecommendations(); 
+        document.querySelectorAll('.map-path, .gate-node').forEach(p => p.classList.toggle('ada-path', store.isADA));
+    });
+
     // Mobile specific: disable 3D tilt on mobile layout to avoid messy touch panning, keep subtle on desktop
     document.querySelectorAll('.tilt-card').forEach(c => {
         c.addEventListener('mousemove', e => {
@@ -343,6 +368,12 @@ function handleLiveDataUpdate(liveData) {
     
     const ac = document.getElementById('live-amenities-container'); ac.innerHTML = '';
     liveData.amenities.forEach(item => ac.appendChild(createStatRow(item)));
+
+    const mc = document.getElementById('live-merch-container');
+    if (mc && liveData.merchandise) {
+        mc.innerHTML = '';
+        liveData.merchandise.forEach(item => mc.appendChild(createStatRow({ ...item, name: `${item.name} Demand` })));
+    }
 
     if(store.userConfig) refreshRecommendations();
 }
@@ -377,6 +408,18 @@ function refreshRecommendations() {
     document.getElementById('rec-exit-gate').textContent = exitData.gateName;
     document.getElementById('rec-exit-reason').textContent = exitData.reason;
 
+    // Transit & Rideshare
+    const isLate = store.latestData.phase === 'Quarter 3' || store.latestData.phase === 'Post-Game';
+    let surge = isLate ? (Math.random() * 2 + 1.5).toFixed(1) : "1.0";
+    let status = isLate ? "Delayed (15m)" : "On Time";
+    let surgeEl = document.getElementById('rec-surge-pricing');
+    if(surgeEl) {
+        surgeEl.textContent = `${surge}x ${surge > 2 ? '(High)' : '(Normal)'}`;
+        surgeEl.style.color = surge > 2 ? 'var(--danger)' : 'var(--warning)';
+        document.getElementById('rec-transit-status').textContent = status;
+        document.getElementById('rec-transit-status').style.color = isLate ? 'var(--warning)' : '#fff';
+    }
+
     // Illuminate SVG Map
     updateSVGMap(entryData.id);
 }
@@ -388,10 +431,16 @@ function getColorForDensity(pct) {
 }
 
 function createStatRow(item) {
-    const col = getColorForDensity(item.density);
+    const isAvoided = store.isRaining && item.id === 'west';
+    let col = getColorForDensity(item.density);
+    if (isAvoided) col = 'var(--danger)';
+    
+    let nameDisplay = item.name;
+    if (isAvoided) nameDisplay = `<span style="color:var(--danger)">⚠️ ${item.name} (Outdoor hazard)</span>`;
+
     const div = document.createElement('div'); div.className = 'stat-row';
     div.innerHTML = `
-        <span class="stat-name">${item.name}</span>
+        <span class="stat-name">${nameDisplay}</span>
         <div class="stat-val-wrapper">
             <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${item.density}%; background:${col}"></div></div>
             <div class="stat-pct" style="color:${col}">${item.density}%</div>
