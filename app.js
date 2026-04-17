@@ -182,22 +182,12 @@ function calculateBestEntry(seatInput, liveGates, isRaining) {
 // ==========================================
 // 4. CHATBOT, GEMINI, & VOICE SpeechRecognition
 // ==========================================
-let activeGeminiKey = null;
-
 function initChatbot() {
     const toggleBtn = document.getElementById('chat-toggle');
     const chatWidget = document.getElementById('ai-chat-widget');
     const header = document.getElementById('chat-header');
     
     header.addEventListener('click', () => chatWidget.classList.toggle('collapsed'));
-
-    // API Modal setup
-    document.getElementById('api-settings-btn').addEventListener('click', () => document.getElementById('api-modal').classList.remove('hidden'));
-    document.getElementById('close-modal-btn').addEventListener('click', () => document.getElementById('api-modal').classList.add('hidden'));
-    document.getElementById('save-key-btn').addEventListener('click', () => {
-        const val = document.getElementById('gemini-key-input').value.trim();
-        if(val) { activeGeminiKey = val; document.getElementById('api-modal').classList.add('hidden'); showToast("Gemini AI API Key Activated."); }
-    });
 
     const sendBtn = document.getElementById('chat-send-btn');
     const inputField = document.getElementById('chat-input-field');
@@ -226,15 +216,16 @@ function initChatbot() {
             setTimeout(handleSend, 500); // Auto send after brief pause
         };
 
-        recognition.onerror = () => {
+        recognition.onerror = (event) => {
             micBtn.classList.remove('listening');
-            showToast("Microphone error or permission denied.");
+            if (event.error === 'not-allowed') showToast("Mic Denied: Secure context required! Serve via localhost/HTTPS, not purely file://");
+            else showToast("Microphone Error: " + event.error);
         };
     } else {
         micBtn.style.display = 'none'; // hide if unsupported
     }
 
-    async function handleSend() {
+    function handleSend() {
         const text = inputField.value.trim();
         if(!text) return;
         appendMessage(text, 'user');
@@ -242,17 +233,11 @@ function initChatbot() {
         
         const thinkingId = appendThinking();
 
-        if(activeGeminiKey) {
-            const reply = await queryRealGemini(text, store.current());
+        setTimeout(() => {
             removeThinking(thinkingId);
+            const reply = processLocalFallbackLogic(text, store.current());
             appendMessage(reply, 'bot');
-        } else {
-            setTimeout(() => {
-                removeThinking(thinkingId);
-                const reply = processLocalFallbackLogic(text, store.current());
-                appendMessage(reply, 'bot');
-            }, 800);
-        }
+        }, 800);
     }
     function appendMessage(text, sender) {
         const div = document.createElement('div'); div.className = `message ${sender}`; div.innerHTML = text; 
@@ -266,25 +251,69 @@ function initChatbot() {
     function scrollToBottom() { messagesContainer.scrollTop = messagesContainer.scrollHeight; }
 }
 
-async function queryRealGemini(userMessage, liveData) {
-    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${activeGeminiKey}`;
-    try {
-        const prompt = `You are a helpful stadium assistant mapping. Be extremely concise.
-        DATA: ${JSON.stringify(liveData)}
-        USER: ${userMessage}`;
-        const response = await fetch(GEMINI_ENDPOINT, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        if(!response.ok) throw new Error("API Failure");
-        const data = await response.json(); return data.candidates[0].content.parts[0].text;
-    } catch(err) { return "<b>API Error.</b> Check key."; }
-}
 
 function processLocalFallbackLogic(query, liveData) {
-    if(query.toLowerCase().includes('gate')) return "Checking gates... I recommend checking the Live Map for the lowest density route.";
-    if(query.toLowerCase().includes('food')) return "Food lines are shortest at the Main Concourse right now.";
-    return "I am analyzing. (Note: Put in a Gemini Key for true open-ended questions!)";
+    const q = query.toLowerCase();
+    
+    // Greeting
+    if (q.match(/hello|hi\b|hey|help|morning|afternoon|evening/)) {
+        return `Hello! I am your onboard Stadium AI. I am scanning the holographic matrix right now. Ask me about **gates, restrooms, food, or exit strategies**!`;
+    }
+
+    // Gate / Route Logic
+    if (q.match(/gate|enter|entrance|door|go in|walk|route/)) {
+        let gates = [...liveData.gates];
+        if (store.isADA) {
+            gates = gates.map(g => (g.id === 'north' || g.id === 'west') ? {...g, density: g.density + 1000} : g);
+        }
+        if (store.isRaining) {
+            gates = gates.map(g => g.id === 'west' ? {...g, density: g.density + 500} : g);
+        }
+        gates.sort((a,b) => a.density - b.density);
+        const best = gates[0];
+        
+        let msg = `Looking at live cameras... <b>${best.name}</b> is the best path at just ${best.density}% capacity.`;
+        if (store.isADA) msg += " (Prioritized fully accessible ramped pathway).";
+        if (store.isRaining && best.id !== 'west') msg += " (Keeping you indoors to avoid the rain).";
+        return msg;
+    }
+
+    // Food / Drinks
+    if (q.match(/food|drink|hungry|eat|beer|water|rations|concessions/)) {
+        const foodOptions = [...liveData.amenities].filter(a => a.type === 'food').sort((a,b) => a.density - b.density);
+        if (liveData.phase === 'Halftime') {
+            return `Normally I would suggest ${foodOptions[0].name}, but it's Halftime and lines are heavily spiked (${foodOptions[0].density}%). I recommend waiting until Q3 if possible!`;
+        }
+        return `Your quickest option is <b>${foodOptions[0].name}</b>. It is currently at ${foodOptions[0].density}% saturation.`;
+    }
+
+    // Restrooms
+    if (q.match(/restroo|bathroo|toilet|washroo|pee/)) {
+        const rests = [...liveData.amenities].filter(a => a.type === 'restroom').sort((a,b) => a.density - b.density);
+        return `The closest restroom queue with the lowest wait is <b>${rests[0].name}</b> (${rests[0].density}% capacity).`;
+    }
+
+    // Merch
+    if (q.match(/merch|store|jersey|buy|shop|apparel/)) {
+        const stores = [...liveData.merchandise].sort((a,b) => a.density - b.density);
+        return `To beat the crowds, head to <b>${stores[0].name}</b>. The primary store lines are moving slowing.`;
+    }
+
+    // Exiting
+    if (q.match(/exit|leave|traffic|uber|rideshare|train|parking/)) {
+        if (liveData.phase === 'Post-Game' || liveData.phase === 'Quarter 3') {
+            return `<b style="color:var(--danger)">Surge Pricing Alert:</b> Rideshares are experiencing severe surging (>2x). Transit lines might be delayed. Follow your blue HUD path on the map for the fastest egress threshold.`;
+        }
+        return `It is currently ${liveData.phase}. If you leave 5 minutes before Post-Game, you will bypass 80% of the stadium parking and traffic congestion!`;
+    }
+
+    // Phase / Status
+    if (q.match(/phase|quarter|time|status/)) {
+        return `We are actively in the <b>${liveData.phase}</b> phase. My internal matrix is tracking thousands of human nodes clustered adjusting to this schedule.`;
+    }
+
+    // Fallback Unrecognized
+    return `I am evaluating the matrix. I specialize in reading physical stadium sensors regarding <b>gates, food, restrooms, merch, and traffic</b>. Try asking definitively about one of those topics!`;
 }
 
 // ==========================================

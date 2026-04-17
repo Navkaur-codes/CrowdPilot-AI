@@ -230,16 +230,13 @@
                 <span>Event Assistant AI</span>
             </div>
             <div style="display:flex; gap:10px; align-items:center;">
-                <button class="chat-settings-btn" id="api-settings-btn" title="Set Gemini API Key"
-                    aria-label="Open AI API Settings">⚙️</button>
                 <button class="chat-toggle" id="chat-toggle" aria-label="Minimize Chat Assistant">▲</button>
             </div>
         </div>
 
         <div class="chat-body" id="chat-body">
             <div class="chat-messages" id="chat-messages" aria-live="polite" aria-atomic="false">
-                <div class="message bot">Hello! I am reading the live data. Speak your question via the mic, or type
-                    below!</div>
+                <div class="message bot">System Online. I am the Smart Stadium AI. Ask me about gate traffic, restrooms, food, or exit strategies!</div>
             </div>
             <div class="chat-input-wrapper">
                 <button id="mic-btn" class="mic-btn" title="Voice AI" aria-label="Activate Speech to Text">🎤</button>
@@ -253,19 +250,7 @@
     <!-- Toast Notifications -->
     <div id="toast-container" class="toast-container"></div>
 
-    <!-- API Key Settings Modal -->
-    <div id="api-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div class="modal-content glass">
-            <h2 id="modal-title">Connect True AI</h2>
-            <p>Paste a Google Gemini API Key to enable contextual reasoning.</p>
-            <input type="password" id="gemini-key-input" placeholder="AI Studio Key (AIzaSy...)"
-                aria-label="Google Gemini API Key">
-            <div class="modal-actions">
-                <button class="btn-cancel" id="close-modal-btn" aria-label="Close Settings">Cancel</button>
-                <button class="btn-primary" id="save-key-btn" aria-label="Save Settings">Activate</button>
-            </div>
-        </div>
-    </div>
+
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
