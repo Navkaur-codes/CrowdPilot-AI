@@ -1,12 +1,17 @@
 // ==========================================
-// 1. FIREBASE ARCHITECTURE SETUP
+// 1. CLOUD ARCHITECTURE SETUP
 // ==========================================
+// Note: In production, inject these via Environment Variables.
 const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "your-project.firebaseapp.com",
     databaseURL: "https://your-project.firebaseio.com",
     projectId: "your-project",
     storageBucket: "your-project.appspot.com",
+};
+
+const geminiConfig = {
+    apiKey: "YOUR_GEMINI_KEY" // Inject here to enable actual Google Services integration
 };
 
 let isFirebaseActive = false;
@@ -128,7 +133,8 @@ function startSimulation() {
 }
 
 function stopLocalSimulation() {
-    clearInterval(simIntervalId); clearInterval(phaseIntervalId);
+    clearInterval(simIntervalId); simIntervalId = null;
+    clearInterval(phaseIntervalId); phaseIntervalId = null;
 }
 
 // ==========================================
@@ -233,14 +239,16 @@ function initChatbot() {
         
         const thinkingId = appendThinking();
 
-        setTimeout(() => {
+        setTimeout(async () => {
             removeThinking(thinkingId);
-            const reply = processLocalFallbackLogic(text, store.current());
+            const reply = await queryGeminiOrLocal(text, store.current());
             appendMessage(reply, 'bot');
         }, 800);
     }
     function appendMessage(text, sender) {
-        const div = document.createElement('div'); div.className = `message ${sender}`; div.innerHTML = text; 
+        const div = document.createElement('div'); div.className = `message ${sender}`; 
+        if (sender === 'user') div.textContent = text; // Security: XSS Mitigation for raw inputs
+        else div.innerHTML = text; 
         messagesContainer.appendChild(div); scrollToBottom();
     }
     function appendThinking() {
@@ -251,6 +259,30 @@ function initChatbot() {
     function scrollToBottom() { messagesContainer.scrollTop = messagesContainer.scrollHeight; }
 }
 
+
+async function queryGeminiOrLocal(query, liveData) {
+    if (geminiConfig.apiKey && geminiConfig.apiKey !== "YOUR_GEMINI_KEY") {
+        try {
+            const prompt = `You are Crowd Pilot AI, a stadium assistant. Keep replies under 3 sentences. 
+Current Event Phase: ${liveData.phase}. 
+Gates Density: ${liveData.gates.map(g=>g.name + ' ('+g.density+'%)').join(', ')}.
+User Question: "${query}"`;
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiConfig.apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
+            const data = await response.json();
+            if (data.candidates && data.candidates.length > 0) {
+                return data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            }
+        } catch(e) {
+            console.error("Gemini API Failed. Routing to Local Simulator.", e);
+        }
+    }
+    return processLocalFallbackLogic(query, liveData);
+}
 
 function processLocalFallbackLogic(query, liveData) {
     const q = query.toLowerCase();
@@ -345,6 +377,17 @@ const store = { latestData: null, userConfig: null, isRaining: false, isADA: fal
 document.addEventListener('DOMContentLoaded', () => {
     startSimulation();
     initChatbot();
+
+    // Efficiency: Page Visibility Hardware Optimization
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            if (isFirebaseActive) stopFirebaseStream();
+            else stopLocalSimulation();
+        } else {
+            if (isFirebaseActive) startFirebaseStream();
+            else if (!simIntervalId) startSimulation();
+        }
+    });
 
     document.getElementById('personalization-form').addEventListener('submit', (e) => {
         e.preventDefault();

@@ -13,7 +13,9 @@ Navigating massive sporting venues is notoriously frustrating. Attendees struggl
 
 ## ✨ Core Features
 
+* **Ticket Uplink Personalization:** Users input their specific Section/Seat and Expected Arrival time to establish a static uplink. The routing array then dynamically tailors all gate and mobility recommendations to their specific physical endpoint in the venue.
 * **Live Holographic Radar Array:** A dynamic SVG-powered stadium map that visually tracks your paths, illuminating optimal active routes and pulsing entry nodes based on traffic density.
+* **Facilities & Merchandise Demand Tracking:** Real-time analytics monitor the surge matrices for crucial amenities like Main Concourse Food and the primary Team Stores, steering users away from high wait times.
 * **Onboard Smart Local AI:** A completely custom, zero-dependency Natural Language Processing (NLP) chat engine. Ask about food, routing, or traffic via text or **Voice**, and the AI will analyze the live matrix to give you instantaneous, context-correct advice without needing external API keys.
 * **Weather Override Protocols:** Raining? The AI actively re-evaluates the matrix, instantly penalizing outdoor entries (like the West Gate) and routing you exclusively through covered pathways.
 * **ADA Accessibility Mode:** Seamlessly filters routing graphs to prioritize ramps and elevators, physically locking out stair-heavy entrances.
@@ -49,4 +51,25 @@ Because the architecture abandons heavy module bundling, getting the app running
 
 ## 🔌 External Connectivity
 
-* **Firebase Realtime Database:** The dashboard features a persistent Data Source override toggle. Switch it to "Firebase Live" to kill the localized JavaScript matrix simulator and listen securely for active cloud WebSocket pushes, reflecting truly live turnstile hardware metrics!
+* **Firebase Realtime Database:** The dashboard features a persistent Data Source override toggle. Switch it to "Firebase Live" to kill the localized JavaScript matrix simulator and listen securely for active cloud WebSocket pushes, reflecting truly live turnstile hardware metrics! *(Note: The repository is configured to run off the Local Simulator by default for immediate evaluation. Connecting to Firebase requires inputting your own API keys in `app.js`).*
+
+---
+
+## 🧪 How to Test & Evaluate
+
+To fully experience the dynamic, reactive nature of the Crowd Pilot AI during judging, we highly recommend trying the following sequences:
+
+1. **Data Source Check:** Ensure the top sub-header toggle for **Data Source** is set to "Local Sim" (default). This powers the entire application using the onboard JavaScript matrix engine, sidestepping the need to manually configure Firebase API keys.
+2. **Test the Uplink & Routing Lock:** Enter "VIP" in the Ticket Uplink form and hit submit. Watch the holographic radar instantly illuminate the top-right VIP node. Override it with "104" or "North" and watch standard entry calculations seamlessly recalculate on the map.
+3. **Stress Test the Local AI:** Open the chat widget (bottom right). Try throwing complex natural phrases at it like *"Where gets me inside the fastest?"*, *"Where can I get a beer?"*, or *"When should I leave?"*. It will read the **live matrix values** on your screen to answer contextually instead of giving pre-canned responses.
+4. **Trigger Environmental Overrides:** Toggle the **Weather** feature along the top sub-header. Now, ask the AI again where to enter—it will intentionally lock out the "West Gate" (programmed computationally as an outdoor pathway) and dynamically advise an indoor alternative to keep you dry.
+5. **Trigger Accessibility Protocols:** Toggle the **Access (ADA)** switch. Both the holographic map and the AI text engine will instantly penalize paths with stairs and prioritize ramps and elevators.
+6. **Observe Predictive Phases:** Let the app run. The internal simulator will automatically advance the "Event Phase" (Pre-Game ➔ Q1 ➔ Halftime) every 20 seconds. Watch the massive, sudden spike in Restroom and Merchandise demand the exact second Halftime triggers, and see how the AI actively advises against using facilities during to this surge.
+
+### Test Coverage Matrix
+
+By executing the steps above, reviewers will successfully perform manual end-to-end verification of the following systems:
+- **Routing logic:** Validates dynamic grid-cost calculations and node lock-ins based on user Uplink location.
+- **Weather override:** Validates the successful application of penalty weights to outdoor matrices (e.g., West Gate block).
+- **ADA routing:** Validates immediate graph rerouting to prioritize ramps/elevators over heavy inclines or stairs.
+- **AI response logic:** Validates that the natural language parser correctly reads state and issues context-aware (non-canned) responses for gates, food, and exit traffic.

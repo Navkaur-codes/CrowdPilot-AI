@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crowd Pilot AI - Test Runner</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body { padding: 3rem; background: var(--bg-dark); }
+        .test-panel { max-width: 800px; margin: 0 auto; background: rgba(10, 10, 18, 0.9); border: 1px solid var(--neon-cyan); border-radius: 8px; padding: 2rem; font-family: monospace; box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);}
+        .test-panel h2 { color: var(--neon-purple); margin-bottom: 2rem; text-transform: uppercase; border-bottom: 1px solid rgba(139, 92, 246, 0.3); padding-bottom: 0.5rem; letter-spacing: 2px;}
+        .pass-block { color: var(--success); margin-bottom: 15px; padding: 10px; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success); }
+        .fail-block { color: var(--danger); margin-bottom: 15px; padding: 10px; background: rgba(255, 0, 85, 0.1); border-left: 4px solid var(--danger); }
+    </style>
+</head>
+<body>
+    <div class="test-panel">
+        <div id="test-results"><span style="color:var(--warning)">Initializing Matrix Test Suite...</span></div>
+    </div>
+    
+    <!-- Virtual DOM Mounts required by app.js initialization -->
+    <div style="display:none;">
+        <span id="data-source-text"></span>
+        <span id="event-phase-display"></span>
+        <div id="live-gates-container"></div>
+        <div id="live-amenities-container"></div>
+        <div id="live-merch-container"></div>
+        <div id="rec-gate"></div>
+        <div id="rec-gate-reason"></div>
+        <div id="rec-route"></div>
+        <div id="rec-entry-time"></div>
+        <div id="rec-food-time"></div>
+        <div id="rec-restroom-time"></div>
+        <div id="rec-exit-gate"></div>
+        <div id="rec-exit-reason"></div>
+        <div id="rec-surge-pricing"></div>
+        <div id="rec-transit-status"></div>
+        <div id="toast-container"></div>
+        
+        <form id="personalization-form"><input id="seat-input"><input id="arrival-time"></form>
+        <div id="plan-lock-screen"></div>
+        <input type="checkbox" id="weather-toggle"><div id="weather-icon"></div>
+        <input type="checkbox" id="ada-toggle"><div id="ada-icon"></div>
+        <input type="checkbox" id="firebase-toggle">
+        <button id="chat-toggle"></button><div id="ai-chat-widget" class="collapsed"></div><div id="chat-header"></div>
+        <button id="chat-send-btn"></button><input id="chat-input-field"><button id="mic-btn"></button><div id="chat-messages"></div>
+    </div>
+
+    <!-- Ensure order matters, load app then tests -->
+    <script src="../app.js"></script>
+    <script src="simulator.test.js"></script>
+</body>
+</html>
