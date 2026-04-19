@@ -11,6 +11,30 @@ Navigating massive sporting venues is notoriously frustrating. Attendees struggl
 
 ---
 
+## 🏢 Chosen Vertical
+Our chosen vertical is **Sports & Live Entertainment**, specifically focusing on large-scale stadium event management and attendee experience optimization.
+
+## 🧠 Approach & Logic
+Our approach avoids heavy external API dependencies in favor of an **Onboard Smart Local AI engine**. The logic is powered by a localized matrix simulator that tracks virtual "surge" queues across the stadium. The routing logic calculates optimal paths by dynamically assigning penalty weights to specific graph edges based on real-time factors:
+- Physical distance to the target destination
+- Real-time queue saturation at gates and facilities
+- Environmental heuristics (e.g., Weather rendering outdoor paths invalid)
+- Accessibility requirements (e.g., ADA mode forcing ramps over stairs)
+
+## ⚙️ How the Solution Works
+The application functions as a highly reactive, central command dashboard:
+1. **Data Ingestion:** The dashboard listens to an internal JavaScript simulator (or Firebase WebSockets in production) to update localized wait times every few seconds.
+2. **User Constraint Matrix:** The Uplink form sets the user's ultimate physical goal (e.g., VIP, Section 104). Weather and ADA toggles apply strict heuristic filters restricting certain pathways.
+3. **Reactive UI & AI:** The visual Holographic Radar dynamically highlights the computed optimal path by reading the updated graph. The integrated Chatbot reads these exact live data arrays to answer natural language questions contextually, all without requiring an external AI API key or round-trip server delay.
+
+## 🤔 Assumptions Made
+To ensure the prototype functions immediately for reviewers without friction, the following assumptions and design choices were made:
+- **No external API keys provided:** We assume reviewers want a zero-configuration "plug and play" experience. Therefore, the default AI engine and data matrices rely entirely on a robust internal Local Simulator rather than demanding OpenAI or Firebase keys.
+- **Modern Browser Engine:** We assume the usage of a modern browser (Chrome, Edge, Safari) that natively supports modern CSS features (CSS Grid, CSS Subgrid, `backdrop-filter` for glassmorphism) without requiring heavy polyfills.
+- **Voice Sandbox Restrictions:** We assume that if voice functionality is formally tested, the reviewer will launch the application over a local development server (`localhost`), as modern browsers universally strictly block `navigator.mediaDevices.getUserMedia` when running on raw `file:///` protocols for security reasons.
+
+---
+
 ## ✨ Core Features
 
 * **Ticket Uplink Personalization:** Users input their specific Section/Seat and Expected Arrival time to establish a static uplink. The routing array then dynamically tailors all gate and mobility recommendations to their specific physical endpoint in the venue.
