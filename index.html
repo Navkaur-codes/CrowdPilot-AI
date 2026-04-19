@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Venue AI - Responsive Dashboard</title>
+    <title>CrowdPilot-AI</title>
     <meta name="description" content="AI Assistant to guide your decisions during large-scale sporting events.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,8 @@
         <header class="app-header glass">
             <div class="logo-wrapper">
                 <div class="logo-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" style="width: 24px; height: 24px;">
                         <circle cx="12" cy="12" r="10"></circle>
                         <circle cx="12" cy="12" r="6"></circle>
                         <circle cx="12" cy="12" r="2"></circle>
@@ -90,7 +91,8 @@
 
                 <section class="card glass tilt-card hover-glow" style="border-top: 2px solid var(--neon-cyan);">
                     <h2>Ticket Uplink</h2>
-                    <p style="color: var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">The AI will adapt logic strictly to your location relative to the venue map.</p>
+                    <p style="color: var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">The AI will adapt logic
+                        strictly to your location relative to the venue map.</p>
                     <form id="personalization-form" class="form-grid">
                         <div class="input-group">
                             <label for="seat-input">Section / Seat</label>
@@ -100,7 +102,8 @@
                             <label for="arrival-time">Expected Arrival</label>
                             <input type="time" id="arrival-time" required>
                         </div>
-                        <button type="submit" class="btn-primary" style="height: 50.5px; margin-top: 0.5rem;">Uplink ⚡</button>
+                        <button type="submit" class="btn-primary" style="height: 50.5px; margin-top: 0.5rem;">Uplink
+                            ⚡</button>
                     </form>
                 </section>
 
@@ -109,10 +112,12 @@
                     <h3 class="subsection-title" style="margin-top:1rem;">Amenities</h3>
                     <div id="live-amenities-container" class="stat-list"></div>
 
-                    <h3 class="subsection-title" style="margin-top:1.5rem; color: var(--warning); border-bottom-color: rgba(250, 204, 21, 0.2);">Merchandise</h3>
+                    <h3 class="subsection-title"
+                        style="margin-top:1.5rem; color: var(--warning); border-bottom-color: rgba(250, 204, 21, 0.2);">
+                        Merchandise</h3>
                     <div id="live-merch-container" class="stat-list"></div>
                 </section>
-                
+
             </div>
 
             <!-- COLUMN 2: Recommendations -->
@@ -156,7 +161,8 @@
                         </div>
                     </div>
 
-                    <div class="rec-block" style="margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                    <div class="rec-block"
+                        style="margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom: 1px dashed rgba(255,255,255,0.1);">
                         <h3>Predicted Exit Pattern</h3>
                         <div class="primary-suggestion neon-text" id="rec-exit-gate" style="font-size:1.2rem;">TBD</div>
                         <p class="reasoning" id="rec-exit-reason">-</p>
@@ -164,11 +170,15 @@
 
                     <div class="rec-block" style="border-bottom:none; padding-bottom:0;">
                         <h3>Live Transit & Rideshare</h3>
-                        <div class="route-box" style="margin-bottom:0.8rem; background:rgba(139, 92, 246, 0.1); border-left-color:var(--neon-purple);">
-                            <strong>Rideshare Surge:</strong> <span id="rec-surge-pricing" style="color:var(--warning); font-weight:bold;">1.0x (Normal)</span>
+                        <div class="route-box"
+                            style="margin-bottom:0.8rem; background:rgba(139, 92, 246, 0.1); border-left-color:var(--neon-purple);">
+                            <strong>Rideshare Surge:</strong> <span id="rec-surge-pricing"
+                                style="color:var(--warning); font-weight:bold;">1.0x (Normal)</span>
                         </div>
-                        <div class="route-box" style="background:rgba(255, 0, 85, 0.1); border-left-color:var(--neon-pink);">
-                            <strong>City Rail (Line E):</strong> <span id="rec-transit-status" style="color:#fff;">On Time</span>
+                        <div class="route-box"
+                            style="background:rgba(255, 0, 85, 0.1); border-left-color:var(--neon-pink);">
+                            <strong>City Rail (Line E):</strong> <span id="rec-transit-status" style="color:#fff;">On
+                                Time</span>
                         </div>
                     </div>
                 </section>
@@ -176,21 +186,29 @@
 
             <!-- COLUMN 3: Live Feed -->
             <div class="col-live">
-                <section class="map-section glass tilt-card hover-glow" aria-label="Interactive Map Display" style="margin-bottom: 2rem;">
+                <section class="map-section glass tilt-card hover-glow" aria-label="Interactive Map Display"
+                    style="margin-bottom: 2rem;">
                     <h2>Live Radar Array</h2>
                     <div class="map-container">
-                        <svg viewBox="0 0 200 200" class="arena-map" role="img" aria-label="Holographic visualization of stadium node routing">
+                        <svg viewBox="0 0 200 200" class="arena-map" role="img"
+                            aria-label="Holographic visualization of stadium node routing">
                             <circle cx="100" cy="100" r="40" class="radar-ring r-1" />
                             <circle cx="100" cy="100" r="40" class="radar-ring r-2" />
                             <circle cx="100" cy="100" r="40" class="radar-ring r-3" />
                             <circle cx="100" cy="100" r="40" class="stadium-core" />
-                            <text x="100" y="104" text-anchor="middle" fill="#fff" font-size="12" font-family="Outfit" font-weight="800" class="svg-neon-text">FIELD</text>
+                            <text x="100" y="104" text-anchor="middle" fill="#fff" font-size="12" font-family="Outfit"
+                                font-weight="800" class="svg-neon-text">FIELD</text>
 
-                            <line x1="128" y1="72" x2="160" y2="40" id="path-vip" class="map-path" stroke-width="4" stroke-dasharray="4" />
-                            <line x1="100" y1="60" x2="100" y2="20" id="path-north" class="map-path" stroke-width="4" stroke-dasharray="4" />
-                            <line x1="100" y1="140" x2="100" y2="180" id="path-south" class="map-path" stroke-width="4" stroke-dasharray="4" />
-                            <line x1="140" y1="100" x2="180" y2="100" id="path-east" class="map-path" stroke-width="4" stroke-dasharray="4" />
-                            <line x1="60" y1="100" x2="20" y2="100" id="path-west" class="map-path" stroke-width="4" stroke-dasharray="4" />
+                            <line x1="128" y1="72" x2="160" y2="40" id="path-vip" class="map-path" stroke-width="4"
+                                stroke-dasharray="4" />
+                            <line x1="100" y1="60" x2="100" y2="20" id="path-north" class="map-path" stroke-width="4"
+                                stroke-dasharray="4" />
+                            <line x1="100" y1="140" x2="100" y2="180" id="path-south" class="map-path" stroke-width="4"
+                                stroke-dasharray="4" />
+                            <line x1="140" y1="100" x2="180" y2="100" id="path-east" class="map-path" stroke-width="4"
+                                stroke-dasharray="4" />
+                            <line x1="60" y1="100" x2="20" y2="100" id="path-west" class="map-path" stroke-width="4"
+                                stroke-dasharray="4" />
 
                             <circle cx="160" cy="40" r="8" class="gate-node" id="node-vip" />
                             <circle cx="100" cy="15" r="8" class="gate-node" id="node-north" />
@@ -198,11 +216,16 @@
                             <circle cx="185" cy="100" r="8" class="gate-node" id="node-east" />
                             <circle cx="15" cy="100" r="8" class="gate-node" id="node-west" />
 
-                            <text x="160" y="44" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">VIP</text>
-                            <text x="100" y="19" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">N</text>
-                            <text x="100" y="189" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">S</text>
-                            <text x="185" y="104" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">E</text>
-                            <text x="15" y="104" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit" font-weight="800">W</text>
+                            <text x="160" y="44" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit"
+                                font-weight="800">VIP</text>
+                            <text x="100" y="19" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit"
+                                font-weight="800">N</text>
+                            <text x="100" y="189" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit"
+                                font-weight="800">S</text>
+                            <text x="185" y="104" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit"
+                                font-weight="800">E</text>
+                            <text x="15" y="104" text-anchor="middle" fill="#fff" font-size="10" font-family="Outfit"
+                                font-weight="800">W</text>
                         </svg>
                     </div>
                 </section>
@@ -236,7 +259,8 @@
 
         <div class="chat-body" id="chat-body">
             <div class="chat-messages" id="chat-messages" aria-live="polite" aria-atomic="false">
-                <div class="message bot">System Online. I am the Smart Stadium AI. Ask me about gate traffic, restrooms, food, or exit strategies!</div>
+                <div class="message bot">System Online. I am the Smart Stadium AI. Ask me about gate traffic, restrooms,
+                    food, or exit strategies!</div>
             </div>
             <div class="chat-input-wrapper">
                 <button id="mic-btn" class="mic-btn" title="Voice AI" aria-label="Activate Speech to Text">🎤</button>

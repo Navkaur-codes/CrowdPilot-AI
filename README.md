@@ -1,6 +1,8 @@
 # Crowd Pilot AI 🏟️
 **The Holographic Stadium Matrix & Smart Event Companion**
 
+🚀 **[Live Demo Available Here](https://crowdpilot-ai.onrender.com)**
+
 A lightweight, purely vanilla HTML/CSS/JavaScript web application designed to act as a personalized, state-of-the-art AI dashboard for attendees at large-scale sporting venues. Built as a high-performance "Command Center" interface.
 
 ## 🎯 The Problem
@@ -62,11 +64,17 @@ This application is engineered strictly on a **Vanilla Frontend Stack (< 1MB)** 
 
 ## 🚀 How to Run
 
-Because the architecture abandons heavy module bundling, getting the app running is instantaneous.
+There are two ways to access the Crowd Pilot AI dashboard:
+
+### 1. Instant Access (Recommended)
+Simply visit the **[Live Demo](https://crowdpilot-ai.onrender.com)** to see the app in action immediately with no installation required.
+
+### 2. Local Setup
+If you prefer to run the project locally or inspect the source code:
 
 1. **Clone or Download** this repository.
 2. **Launch the App:** You can launch the dashboard by simply double-clicking `index.html` to open it in your browser (`file:///`).
-3. **Using the Voice AI:** *Important!* Modern browsers proactively block microphone execution on `file:///` protocols for security reasons. If you want to use the **Voice Chat** feature, you must serve the application on a local server context:
+3. **Using the Voice AI:** *Important!* Modern browsers proactively block microphone execution on `file:///` protocols for security reasons. To use the **Voice Chat** feature, you must serve the application on a local server context:
    * **VS Code:** Right-click `index.html` and use the **Live Server** extension.
    * **NodeJS:** Open a terminal and run `npx serve`. 
    *(Then open the provided `http://localhost:XXXX` link in your browser!)*
